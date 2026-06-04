@@ -1,4 +1,10 @@
 import customtkinter as ctk
+import threading
+
+from core.speech import listen
+from core.tts import speak
+from core.command_processor import process
+
 
 class NovaGUI:
 
@@ -10,9 +16,7 @@ class NovaGUI:
         self.root = ctk.CTk()
 
         self.root.title("NOVA Assistant")
-
         self.root.geometry("700x500")
-
         self.root.resizable(False, False)
 
         self.create_widgets()
@@ -25,7 +29,6 @@ class NovaGUI:
             text="NOVA",
             font=("Arial", 30, "bold")
         )
-
         self.title_label.pack(pady=20)
 
         # Status
@@ -34,7 +37,6 @@ class NovaGUI:
             text="Status: Ready",
             font=("Arial", 16)
         )
-
         self.status_label.pack(pady=10)
 
         # Conversation Box
@@ -43,45 +45,80 @@ class NovaGUI:
             width=600,
             height=250
         )
-
         self.chat_box.pack(pady=20)
 
         # Listen Button
         self.listen_button = ctk.CTkButton(
-        self.root,
-        text="🎤 Start Listening",
-        command=self.test_button
-         )
-
+            self.root,
+            text="🎤 Start Listening",
+            command=self.start_listening
+        )
         self.listen_button.pack(pady=20)
-    
+
     def add_user_message(self, message):
 
         self.chat_box.insert(
-        "end",
-        f"\n🧑 You: {message}\n"
+            "end",
+            f"\n🧑 You: {message}\n"
         )
+        self.chat_box.see("end")
 
     def add_assistant_message(self, message):
 
         self.chat_box.insert(
-        "end",
-        f"🤖 Nova: {message}\n"
+            "end",
+            f"🤖 Nova: {message}\n"
         )
+        self.chat_box.see("end")
 
     def update_status(self, status):
 
         self.status_label.configure(
-        text=f"Status: {status}"
+            text=f"Status: {status}"
         )
+
+    def listen_and_process(self):
+
+        self.update_status("Listening")
+
+        command = listen()
+
+        print("Recognized command:", command)  # Debug line
+
+        if not command:
+            self.update_status("Ready")
+            return
+
+        self.add_user_message(command)
+
+        response = process(command)
+
+        if response:
+            self.add_assistant_message(response)
+            speak(response)
+        else:
+            self.add_assistant_message(
+                "Command not recognized"
+            )
+            speak("Command not recognized")
+
+        self.update_status("Ready")
 
     def test_button(self):
 
-     self.update_status("Listening")
+        self.update_status("Listening")
 
-     self.add_user_message("Hello Nova")
+        self.add_user_message("Hello Nova")
+        self.add_assistant_message("How can I help you?")
 
-     self.add_assistant_message("How can I help you?")
+    def start_listening(self):
+
+        thread = threading.Thread(
+            target=self.listen_and_process
+        )
+
+        thread.daemon = True
+        thread.start()
 
     def run(self):
         self.root.mainloop()
