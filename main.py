@@ -1,12 +1,18 @@
 from core.speech import listen
 from core.tts import speak
 from core.command_processor import process
+from core.wake_word import detect_wake_word
 
-speak("Nova Here!! How can I help you?")
+speak("Nova Activated")
 
 while True:
 
-    command = listen()
+    print("Waiting for wake word...")
+
+    if detect_wake_word():
+
+        speak("Yes?")
+        command = listen()
 
     if not command:
         continue

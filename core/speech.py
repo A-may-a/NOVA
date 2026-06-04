@@ -1,5 +1,3 @@
-# core/speech.py
-
 import speech_recognition as sr
 
 def listen():
@@ -10,16 +8,29 @@ def listen():
 
         print("Listening...")
 
-        recognizer.adjust_for_ambient_noise(source)
+        recognizer.adjust_for_ambient_noise(
+            source,
+            duration=1
+        )
 
-        audio = recognizer.listen(source)
+        audio = recognizer.listen(
+            source,
+            timeout=5,
+            phrase_time_limit=5
+        )
 
     try:
 
-        command = recognizer.recognize_google(audio)
+        command = recognizer.recognize_google(
+            audio
+        )
+
+        print("Recognized:", command)
 
         return command.lower()
 
-    except:
+    except Exception as e:
+
+        print("Speech Error:", e)
 
         return ""

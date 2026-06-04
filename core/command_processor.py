@@ -12,7 +12,7 @@ def process(command):
         open_chrome()
         return "Opening Chrome"
 
-    elif "open notepad" in command:
+    elif "open notepad" in command or "note" in command or "open notes" in command:
         open_notepad()
         return "Opening Notepad"
 
@@ -74,7 +74,7 @@ def process(command):
         return tell_joke()
 
     # Exit
-    elif "exit nova" in command or "stop nova" in command or "exit" in command or "stop" in command:
+    elif "exit nova" in command or "stop nova" in command or "exit" in command or "stop" in command or "stop" in command or "close" in command:
         return "EXIT"
 
     return None
