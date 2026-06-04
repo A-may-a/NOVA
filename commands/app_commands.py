@@ -16,7 +16,7 @@ def open_chrome():
 
     print("Chrome not found!")
 
-open_chrome()
+    open_chrome()
 
 def open_notepad():
     os.system("notepad")

@@ -1,11 +1,17 @@
+import threading
 import pyttsx3
 
 def speak(text):
-    engine = pyttsx3.init()
 
-    print("Assistant:", text)
+    def run():
 
-    engine.say(text)
-    engine.runAndWait()
+        engine = pyttsx3.init()
 
-    engine.stop()
+        engine.say(text)
+
+        engine.runAndWait()
+
+    threading.Thread(
+        target=run,
+        daemon=True
+    ).start()
