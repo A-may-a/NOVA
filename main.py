@@ -13,11 +13,14 @@ while True:
 
     print("You:", command)
 
-    response = process(command)  # <-- Create response variable
+    response = process(command)
 
-    print("Response:", response)  # Debug
+    if response == "EXIT":
+        speak("Goodbye")
+        break
 
-    if response:
+    elif response:
         speak(response)
+
     else:
         speak("Command not recognized")

@@ -9,3 +9,10 @@ def open_youtube():
 def open_google():
 
     webbrowser.open("https://google.com")
+
+
+def open_github():
+    webbrowser.open("https://github.com")
+
+def open_chatgpt():
+    webbrowser.open("https://chatgpt.com")
